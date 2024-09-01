@@ -77,6 +77,7 @@ export default function SignUp() {
           <spanc className="text-blue-700">Sign in</spanc>
         </Link>
       </div>
+      {error && <p className="text-red-500 mt-5">{error}</p>}
     </div>
   );
 }
