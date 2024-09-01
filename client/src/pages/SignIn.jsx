@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -9,21 +9,24 @@ import {
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const { error, loading } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  const { error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
   };
+
   const handleSubmit = async (e) => {
-    setLoding(true);
     e.preventDefault();
+    setLoading(true);
     try {
       dispatch(signInStart());
-      const res = await fetch("/api/auth/signin", {
+      const res = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,28 +34,25 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        dispatch(signInFailure(errorData.message));
-        return;
-      }
-
       const data = await res.json();
       if (data.success === false) {
         dispatch(signInFailure(data.message));
+        setLoading(false);
         return;
       }
+
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.message));
+    } finally {
+      setLoading(false);
     }
-
-    console.log(data);
   };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign In </h1>
+      <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="email"
@@ -70,13 +70,13 @@ export default function SignIn() {
         />
         <button
           disabled={loading}
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disable:opacity-95"
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-95"
         >
           {loading ? "Loading..." : "Sign In"}
         </button>
       </form>
       <div className="flex gap-2 mt-5">
-        <p>Don't have an account?</p>
+        <p>Don&apos;t have an account?</p>
         <Link to={"/sign-up"}>
           <span className="text-blue-700">Sign Up</span>
         </Link>
