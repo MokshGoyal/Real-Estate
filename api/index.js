@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import AuthRouter from "./routes/AuthRoutes.js";
 import UserRouter from "./routes/UserRoutes.js";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 mongoose
@@ -17,6 +18,7 @@ mongoose
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on http://localhost:${process.env.PORT}`);
