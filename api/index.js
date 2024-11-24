@@ -3,7 +3,6 @@ import express from "express";
 import mongoose from "mongoose";
 import AuthRouter from "./routes/AuthRoutes.js";
 import UserRouter from "./routes/UserRoutes.js";
-import listingRouter from "./routes/listingRoute.js"
 import cloudinary from "cloudinary";
 
 import cookieParser from "cookie-parser";
@@ -26,8 +25,8 @@ app.use(cookieParser());
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET
-})
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on http://localhost:${process.env.PORT}`);
@@ -35,7 +34,6 @@ app.listen(process.env.PORT, () => {
 
 app.use("/api/user", UserRouter);
 app.use("/api/auth", AuthRouter);
-app.use("/api/listing", listingRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

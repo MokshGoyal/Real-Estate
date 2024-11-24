@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
@@ -37,7 +37,6 @@ export default function SignUp() {
       setError(error.message);
     }
 
-    console.log(data);
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
