@@ -1,16 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { createListing } from '../../../api/controller/listingController.js';
 
 function CreateListing() {
+  
+  const [image, setImage] = useState([]);
+
+  const handleImageSubmit = (e) => {
+    if(image.length > 0 && image.length < 7) {
+      const promise = [];
+
+      for(i = 0; i < image.length; i++) {
+        promise.push(storeImage(files[i]));
+      }
+    }
+  };
+
+
+
+    
   return (
     <main className='p-3 max-w-4xl mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Create a Listing</h1>
         <form className='flex flex-col sm:flex-row gap-4' >
             <div className='flex flex-col sm:flex-col gap-4 flex-1'>
-                <input type="text" placeholder='Name' className='border p-3 rouded-lg' id='name' maxLength='62' minLength='10' required  />
+                <input type="text" placeholder='Name' className='border p-3 rounded-lg' id='name' maxLength='62' minLength='10' required  />
 
-                <textarea type="text" placeholder='Description' className='border p-3 rouded-lg' id='description'  required  />
+                <textarea type="text" placeholder='Description' className='border p-3 rounded-lg' id='description'  required  />
 
-                <input type="text" placeholder='address' className='border p-3 rouded-lg' id='address' required  />
+                <input type="text" placeholder='address' className='border p-3 rounded-lg' id='address' required  />
 
                 <div className='flex gap-6 flex-wrap'>
                     <div className='flex gap-2'>
@@ -82,8 +99,8 @@ function CreateListing() {
 
             </p>
             <div className="flex gap-4 ">
-                <input className='p-3 border border-gray-300 rounded w-full' type="file" id='images' accept='image/*' multiple />
-                <button className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:op-80'>Upload</button>
+                <input onChange={(e)=> setImage(e.target.files)} className='p-3 border border-gray-300 rounded w-full' type="file" id='images' accept='image/*' multiple />
+                <button type='button' onClick={submitImage} className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:op-80'>Upload</button>
             </div>
             <button className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>Create Listing</button>
           </div>

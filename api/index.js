@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import AuthRouter from "./routes/AuthRoutes.js";
 import UserRouter from "./routes/UserRoutes.js";
 import listingRouter from "./routes/listingRoute.js"
+import cloudinary from "cloudinary";
 
 import cookieParser from "cookie-parser";
 dotenv.config();
@@ -21,6 +22,12 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET
+})
 
 app.listen(process.env.PORT, () => {
   console.log(`Server started on http://localhost:${process.env.PORT}`);
