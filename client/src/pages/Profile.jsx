@@ -11,15 +11,15 @@ import {
   signoutUserSuccess,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const[showListingsError,setShowListingsError]=useState(false);
-  const [userListings,setUserListings]=useState([]);//dekh liyo ek baar
+  const [showListingsError, setShowListingsError] = useState(false);
+  const [userListings, setUserListings] = useState([]);//dekh liyo ek baar
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -73,7 +73,7 @@ export default function Profile() {
       const res = await fetch('/api/auth/signout');
       console.log('route fetched');
       const data = await res.json();
-      if(data.success === false) {
+      if (data.success === false) {
         console.error('data fetch failure');
         dispatch(signoutUserFailure(data.message));
         return;
@@ -83,48 +83,46 @@ export default function Profile() {
       dispatch(signoutUserSuccess());
       console.log('action dispatched and user signedout');
     } catch (error) {
-      
+
     }
   }
 
-  const handleShowListings =async()=>{
+  const handleShowListings = async () => {
+    console.log('handleShowListings called');
     try {
-    setShowListingsError(false);
-      const res=await fetch(`/api/user/listings/$
-       {currentUser._id}`);
+      setShowListingsError(false);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
 
-      const data=await res.json();
-
-      if(data.success===false){
-      setShowListingsError(true);
-      return ;
-
+      const data = await res.json();;
+      if (data.success === false) {
+        setShowListingsError(true);
+        return;
+      }
+      console.log('data', data);
       setUserListings(data);
-    } 
     }
     catch (error) {
       setShowListingsError(true);
     }
   }
 
-  const handleListingDelete=async(listingId)=>{
+  const handleListingDelete = async (listingId) => {
     try {
-      const res= await fetch(`/api/listing/delete/${listingId}`,{
-      method:'DELETE',
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: 'DELETE',
       });
 
-      const data=await res.json();
-      if(data.success===false){
+      const data = await res.json();
+      if (data.success === false) {
         console.log(data.message);
         return;
-        
-        setUserListings((prev)=>
-           prev.filter((listing)=> listing._id!==listingId)
-      );
       }
+      setUserListings((prev) =>
+      prev.filter((listing) => listing._id !== listingId)
+      );
     } catch (error) {
       console.log(error.message);
-      
+
     }
   }
 
@@ -160,7 +158,7 @@ export default function Profile() {
         >
           {loading ? "Loading.." : "Update"}
         </button>
-        <Link className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"     to={"/create-listing"}>
+        <Link className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95" to={"/create-listing"}>
           Create Listing
         </Link>
       </form>
@@ -171,46 +169,43 @@ export default function Profile() {
         >
           Delete Account
         </span>
-        <span  onClick={handleSignout} className="text-red-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleSignout} className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
       <p className="text-red-700 mt-5">{error ? "request ok" : ""}</p>
       <p className="text-green-700 mt-5">
         {updateSuccess ? "Profile successfully updated!" : ""}
       </p>
       <button onClick={handleShowListings} className='text-green-700 w-full'>
-      Show Listings 
+        Show Listings
       </button>
       <p className='text-red-700 mt-5'>
-      {showListingsError ? 'Error showing listings':''}
+        {showListingsError ? 'Error showing listings' : ''}
       </p>
 
-     {userListings && userListings.length>0 && 
-     <div className="flex flex-col gap-4">
-      <h1 className='text-center mt-7 text-2xl font-semihold'>your <Listings>                               </Listings></h1>
-       {userListings.map((listing)=>(
-        <div key={listing._id} 
-        className='border rounded-lg p-3 flex justify-between items-center gap-4' >
-          <Link to={`/listing/${listing._id}`}>
-          <img src={listing.imageUrls[0]} alt="listing cover" className='h-16 w-16 object-contain'/>
-          </Link>
-          <Link  
-          className='text-slate-700 font-semibold  hover:underline truncate flex-1'
-          to={`/listing/${listing._id}`}>
-          <p >{listing.name}</p>
-          </Link>
-          <div className="flex flex-col item-center">
-              <button onClick={()=>handleListingDelete(listing._id)} className='text-red-700 
-              uppercase'>Delete</button>
-              <button className='text-green-700
-               uppercase'>Edit</button>
+      {userListings && userListings.length > 0 && 
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">Your Listings</h1>
+          {userListings.map((listing) => <div key={listing._id}  className="border-rounded-lg p-3 flex justify-between items-center gap-4">            
+            <Link to={`listings/${listing._id}`} >
+              <img src={listing.imgUrls[0]} alt="listing cover" className="h-16 w-16 object-contain "/>
+            </Link>
+            <Link className="text-slate-700 font-semibold hover:underline truncate  flex-1" to={`listing/${listing._id}`}>
+              <p>{listing.name} </p>
+            
+            </Link>
 
+          <div className="flex flex-col item-center">
+            <button className="text-red-700 uppercase">Delete</button>
+            <button className="text-green-700 uppercase">Edit</button>
           </div>
-        </div>
-      ))
-     }
-     </div>}
-      
-    
+
+
+          </div>)}
+
+        </div>}
+        
+
+
 
     </div>
   );
