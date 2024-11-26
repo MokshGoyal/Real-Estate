@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import AuthRouter from "./routes/AuthRoutes.js";
 import UserRouter from "./routes/UserRoutes.js";
 import cloudinary from "cloudinary";
+import listingRoute from "./routes/ListingRoutes.js"
 
 import cookieParser from "cookie-parser";
 dotenv.config();
@@ -34,6 +35,7 @@ app.listen(process.env.PORT, () => {
 
 app.use("/api/user", UserRouter);
 app.use("/api/auth", AuthRouter);
+app.use("/api/listings", listingRoute)
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
