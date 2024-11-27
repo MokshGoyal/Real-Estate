@@ -107,8 +107,9 @@ export default function Profile() {
   }
 
   const handleListingDelete = async (listingId) => {
+    console.log('delete listings started')
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`, {
+      const res = await fetch(`/api/listings/delete/${listingId}`, {
         method: 'DELETE',
       });
 
@@ -122,7 +123,6 @@ export default function Profile() {
       );
     } catch (error) {
       console.log(error.message);
-
     }
   }
 
@@ -195,7 +195,7 @@ export default function Profile() {
             </Link>
 
           <div className="flex flex-col item-center">
-            <button onClick={()=>handleListingDelete()} className="text-red-700 uppercase">Delete</button>
+            <button onClick={()=>handleListingDelete(listing._id)} className="text-red-700 uppercase">Delete</button>
             <button className="text-green-700 uppercase">Edit</button>
           </div>
 
